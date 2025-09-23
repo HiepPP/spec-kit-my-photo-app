@@ -1,50 +1,63 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+SYNC IMPACT REPORT
+Version change: NEW → 1.0.0
+Modified principles: None (new constitution)
+Added sections:
+- Core Principles (5 principles for minimalist web app)
+- Technology Constraints
+- Development Workflow
+- Governance
+Removed sections: None
+Templates requiring updates:
+- ✅ plan-template.md (compatible - references constitution check)
+- ✅ spec-template.md (compatible - no constitutional constraints)
+- ✅ tasks-template.md (compatible - follows TDD principles)
+Follow-up TODOs: None
+-->
+
+# My Photo App Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Vanilla Web Standards
+Use vanilla JavaScript, HTML, and CSS where possible. Modern web APIs and standards are preferred over complex frameworks. Libraries may only be added when they provide essential functionality that cannot be reasonably implemented with vanilla technologies or when they significantly reduce complexity without introducing significant dependencies.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. 100% Test Coverage (NON-NEGOTIABLE)
+Every line of code MUST have corresponding unit tests. Test coverage below 100% blocks all releases. Tests MUST be written before implementation (TDD). Red-Green-Refactor cycle is strictly enforced. No exceptions for "simple" code or "obvious" functionality.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Accessibility First
+All user interfaces MUST include proper ARIA labels, semantic HTML, and keyboard navigation support. Accessibility requirements are non-negotiable and MUST be validated before any feature is considered complete. Follow WCAG 2.1 AA standards as minimum baseline.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Local SQLite Storage
+All data persistence MUST use local SQLite databases. No external databases, cloud storage, or remote dependencies for data storage. The application MUST function completely offline. Data export/import capabilities are required for user control.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Minimal Dependencies
+No external dependencies beyond Vite for build tooling. Any proposed dependency MUST be justified with clear rationale for why vanilla implementation is insufficient. Dependencies that duplicate native browser capabilities are forbidden.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Technology Constraints
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- **Build Tool**: Vite only for development and production builds
+- **Database**: SQLite with local file storage only
+- **Testing**: Browser-native testing or minimal testing utilities
+- **Styling**: CSS custom properties, CSS Grid, Flexbox - no CSS frameworks
+- **JavaScript**: ES2020+ features, Web APIs, no transpilation unless required for specific browser support
+- **Bundling**: Vite's native bundling, no additional bundlers or plugins unless essential
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Development Workflow
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- **Test-Driven Development**: Tests written and failing before any implementation
+- **Local Development**: All development occurs locally with no external service dependencies
+- **Accessibility Validation**: Manual and automated accessibility testing required
+- **Performance Standards**: Core Web Vitals must meet "Good" thresholds
+- **Code Review**: All changes require review focusing on constitutional compliance
+- **Documentation**: Every feature requires updated documentation including accessibility notes
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other development practices and guidelines. Changes to core principles require documented justification and migration plan. All code reviews MUST verify constitutional compliance before approval.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Amendment Process**: Constitutional changes require unanimous approval and complete regression testing. Version increments follow semantic versioning for governance changes.
+
+**Compliance Review**: Weekly constitution compliance audits required. Violations must be resolved immediately or feature reverted.
+
+**Version**: 1.0.0 | **Ratified**: 2025-09-23 | **Last Amended**: 2025-09-23
