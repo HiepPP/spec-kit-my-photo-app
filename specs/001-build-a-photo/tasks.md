@@ -76,10 +76,10 @@
 
 ## Phase 3.9: Integration and Performance
 
-- [ ] T036 Add performance monitoring for infinite scroll performance
-- [ ] T037 Implement virtualization for large album lists (react-window integration)
-- [ ] T038 Add image preloading for smooth user experience
-- [ ] T039 Optimize bundle size and implement code splitting
+- [x] T036 Add performance monitoring for infinite scroll performance
+- [x] T037 Implement virtualization for large album lists (react-window integration)
+- [x] T038 Add image preloading for smooth user experience
+- [x] T039 Optimize bundle size and implement code splitting
 
 ## Phase 3.10: Testing and Validation
 

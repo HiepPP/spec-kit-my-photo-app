@@ -1,8 +1,11 @@
 import { useCallback, useRef } from 'react'
 import { AlbumGridProps } from '../../types'
 import AlbumTile from '../AlbumTile'
+import VirtualizedAlbumGrid from './VirtualizedAlbumGrid'
 import { Skeleton } from '../ui/skeleton'
 import { cn } from '../../lib/utils'
+import { useSmartVirtualization } from '../../hooks/useVirtualization'
+import { useAlbumImagePreloading } from '../../hooks/useImagePreloading'
 
 const AlbumGrid = ({
   albums,
@@ -14,6 +17,41 @@ const AlbumGrid = ({
   ...props
 }: AlbumGridProps) => {
   const gridRef = useRef<HTMLDivElement>(null)
+
+  // Smart virtualization decision based on album count and performance
+  const virtualization = useSmartVirtualization(albums.length, 280, 320, {
+    itemThreshold: 50,
+    heightThreshold: 2000
+  })
+
+  // Image preloading for smooth user experience
+  const { preloadState, preloadStats } = useAlbumImagePreloading(albums, {
+    enableThumbnailPreloading: true,
+    preloadAhead: virtualization.shouldVirtualize ? 20 : 10,
+    priorities: {
+      thumbnail: 'high',
+      fullImage: 'low'
+    },
+    smartPreloading: true
+  })
+
+  // Use virtualized grid for large datasets
+  if (virtualization.shouldVirtualize && !loading) {
+    return (
+      <VirtualizedAlbumGrid
+        albums={albums}
+        onAlbumClick={onAlbumClick}
+        onAlbumReorder={onAlbumReorder}
+        onAlbumDelete={onAlbumDelete}
+        loading={loading}
+        className={className}
+        containerHeight={virtualization.containerHeight}
+        itemWidth={virtualization.itemDimensions.width}
+        itemHeight={virtualization.itemDimensions.height}
+        {...props}
+      />
+    )
+  }
 
   // Keyboard navigation handler
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
@@ -155,6 +193,24 @@ const AlbumGrid = ({
           aria-posinset={index + 1}
         />
       ))}
+
+      {/* Performance indicator for development */}
+      {process.env.NODE_ENV === 'development' && preloadState.isPreloading && (
+        <div className="fixed bottom-4 right-4 bg-blue-500 text-white text-xs px-3 py-2 rounded-lg shadow-lg">
+          <div className="flex items-center space-x-2">
+            <div className="animate-spin w-3 h-3 border border-white border-t-transparent rounded-full" />
+            <span>Preloading images... ({preloadState.preloadingCount})</span>
+          </div>
+        </div>
+      )}
+
+      {/* Preload stats for development */}
+      {process.env.NODE_ENV === 'development' && preloadStats.total > 0 && (
+        <div className="fixed bottom-16 right-4 bg-green-500 text-white text-xs px-3 py-2 rounded-lg shadow-lg">
+          <div>Preloaded: {preloadStats.successful}/{preloadStats.total}</div>
+          <div>Cache hit rate: {(preloadStats.cacheHitRate * 100).toFixed(1)}%</div>
+        </div>
+      )}
     </div>
   )
 }

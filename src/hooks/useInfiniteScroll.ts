@@ -1,10 +1,12 @@
 /**
  * useInfiniteScroll Hook
  * Provides infinite scrolling functionality with IntersectionObserver
+ * Includes performance monitoring for scroll metrics
  */
 
 import { useRef, useEffect, useCallback, useState } from 'react'
 import { InfiniteScrollOptions } from '../types'
+import { usePerformanceMonitor, measureAsyncTime } from '../utils/performanceMonitor'
 
 export interface UseInfiniteScrollReturn {
   /** Reference to attach to the trigger element */
@@ -25,6 +27,12 @@ export interface UseInfiniteScrollReturn {
   setError: (error: string | null) => void
   /** Focus management for new content */
   focusNewContent: (selector?: string) => void
+  /** Performance metrics */
+  performanceMetrics: () => any
+  /** Start performance monitoring */
+  startPerformanceMonitoring: () => void
+  /** Stop performance monitoring */
+  stopPerformanceMonitoring: () => void
 }
 
 export function useInfiniteScroll(
@@ -41,6 +49,24 @@ export function useInfiniteScroll(
   const [isLoading, setIsLoading] = useState(false)
   const [hasNextPage, setHasNextPage] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  // Performance monitoring
+  const performanceMonitor = usePerformanceMonitor({
+    enableFPSMonitoring: true,
+    enableMemoryMonitoring: true,
+    enableRenderTimeMonitoring: true,
+    sampleSize: 50,
+    reportingInterval: 10000, // Report every 10 seconds
+    onReport: (metrics) => {
+      console.group('📊 Infinite Scroll Performance')
+      console.log('Scroll Performance:', {
+        avgFPS: metrics.scrollFPS.length > 0 ? (metrics.scrollFPS.reduce((a, b) => a + b, 0) / metrics.scrollFPS.length).toFixed(2) : 'N/A',
+        avgLoadTime: metrics.loadTime.length > 0 ? (metrics.loadTime.reduce((a, b) => a + b, 0) / metrics.loadTime.length).toFixed(2) + 'ms' : 'N/A',
+        avgIntersectionTime: metrics.intersectionTime.length > 0 ? (metrics.intersectionTime.reduce((a, b) => a + b, 0) / metrics.intersectionTime.length).toFixed(2) + 'ms' : 'N/A'
+      })
+      console.groupEnd()
+    }
+  })
 
   // Refs
   const triggerRef = useRef<HTMLElement>(null)
@@ -71,7 +97,7 @@ export function useInfiniteScroll(
     callbackRef.current = callback
   }, [callback])
 
-  // Load more function for manual triggering
+  // Load more function for manual triggering with performance tracking
   const loadMore = useCallback(async () => {
     if (isLoading || !hasNextPage) {
       return
@@ -81,25 +107,27 @@ export function useInfiniteScroll(
     setError(null)
 
     try {
-      await callbackRef.current()
+      await measureAsyncTime(callbackRef.current)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
       setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
-  }, [isLoading, hasNextPage])
+  }, [isLoading, hasNextPage, performanceMonitor])
 
-  // Intersection observer callback
+  // Intersection observer callback with performance tracking
   const handleIntersection = useCallback(
     (entries: IntersectionObserverEntry[]) => {
+      const intersectionStartTime = performance.now()
       const entry = entries[0]
 
       if (entry.isIntersecting && hasNextPage && !isLoading) {
+        performanceMonitor.recordIntersectionTime(intersectionStartTime)
         loadMore()
       }
     },
-    [hasNextPage, isLoading, loadMore]
+    [hasNextPage, isLoading, loadMore, performanceMonitor]
   )
 
   // Initialize IntersectionObserver
@@ -148,5 +176,8 @@ export function useInfiniteScroll(
     setHasNextPage,
     setError,
     focusNewContent,
+    performanceMetrics: performanceMonitor.getMetrics,
+    startPerformanceMonitoring: performanceMonitor.start,
+    stopPerformanceMonitoring: performanceMonitor.stop,
   }
 }
