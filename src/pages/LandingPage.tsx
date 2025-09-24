@@ -4,7 +4,9 @@ import AlbumGrid from '../components/AlbumGrid'
 import PhotoTileView from '../components/PhotoTileView'
 import ZoomModal from '../components/ZoomModal'
 import UploadDropzone from '../components/UploadDropzone'
+import { Spinner } from '../components/ui/spinner'
 import { mockDataService } from '../services/MockDataService'
+import { useInfiniteAlbums } from '../hooks/useInfiniteAlbums'
 
 interface LandingPageProps {
   viewState: ViewState
@@ -19,41 +21,31 @@ const LandingPage = ({
   onPhotoClick,
   onCloseZoom
 }: LandingPageProps) => {
-  const [albums, setAlbums] = useState<Album[]>([])
+  const {
+    albums,
+    loading: albumsLoading,
+    error: albumsError,
+    hasNextPage,
+    triggerRef,
+    refresh: refreshAlbums
+  } = useInfiniteAlbums(12)
+
   const [photos, setPhotos] = useState<Photo[]>([])
-  const [loading, setLoading] = useState(false)
+  const [photosLoading, setPhotosLoading] = useState(false)
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
-
-  useEffect(() => {
-    const loadAlbums = async () => {
-      setLoading(true)
-      try {
-        const albumsData = await mockDataService.getAllAlbums()
-        setAlbums(albumsData)
-      } catch (error) {
-        console.error('Failed to load albums:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    if (viewState.currentView === 'albums') {
-      loadAlbums()
-    }
-  }, [viewState.currentView])
 
   useEffect(() => {
     const loadPhotos = async () => {
       if (!viewState.selectedAlbumId) return
 
-      setLoading(true)
+      setPhotosLoading(true)
       try {
         const photosData = await mockDataService.getPhotosInAlbum(viewState.selectedAlbumId)
         setPhotos(photosData)
       } catch (error) {
         console.error('Failed to load photos:', error)
       } finally {
-        setLoading(false)
+        setPhotosLoading(false)
       }
     }
 
@@ -85,9 +77,8 @@ const LandingPage = ({
   const handleAlbumReorder = async (albumId: number, newOrder: number) => {
     try {
       await mockDataService.updateAlbumOrder(albumId, newOrder)
-      // Reload albums to reflect the new order
-      const albumsData = await mockDataService.getAllAlbums()
-      setAlbums(albumsData)
+      // Refresh albums to reflect the new order
+      await refreshAlbums()
     } catch (error) {
       console.error('Failed to reorder album:', error)
     }
@@ -96,9 +87,8 @@ const LandingPage = ({
   const handleFilesSelected = async (files: FileList) => {
     try {
       await mockDataService.uploadPhotos(Array.from(files))
-      // Reload albums to show any new albums created
-      const albumsData = await mockDataService.getAllAlbums()
-      setAlbums(albumsData)
+      // Refresh albums to show any new albums created
+      await refreshAlbums()
     } catch (error) {
       console.error('Failed to upload files:', error)
     }
@@ -145,10 +135,35 @@ const LandingPage = ({
             albums={albums}
             onAlbumClick={onAlbumClick}
             onAlbumReorder={handleAlbumReorder}
-            loading={loading}
+            loading={albumsLoading && albums.length === 0}
             className="responsive-grid"
             data-testid="album-grid"
           />
+
+          {/* Infinite Scroll Trigger */}
+          {hasNextPage && (
+            <div
+              ref={triggerRef}
+              className="flex justify-center items-center py-8"
+              data-testid="infinite-scroll-trigger"
+            >
+              {albumsLoading ? (
+                <div className="flex items-center space-x-2">
+                  <Spinner size="md" />
+                  <span className="text-muted-foreground">Loading more albums...</span>
+                </div>
+              ) : (
+                <div className="text-gray-400">Scroll to load more albums</div>
+              )}
+            </div>
+          )}
+
+          {/* Error state */}
+          {albumsError && (
+            <div className="text-center py-4">
+              <p className="text-red-600">Error loading albums: {albumsError}</p>
+            </div>
+          )}
         </div>
       )}
 
@@ -157,7 +172,7 @@ const LandingPage = ({
           <PhotoTileView
             photos={photos}
             onPhotoClick={onPhotoClick}
-            loading={loading}
+            loading={photosLoading}
             selectedPhotoId={viewState.selectedPhotoId}
             className="responsive-grid"
             data-testid="photo-tile-view"

@@ -54,10 +54,10 @@
 
 ## Phase 3.6: Infinite Loading Implementation
 
-- [ ] T023 [P] Create useInfiniteScroll custom hook in src/hooks/useInfiniteScroll.ts
-- [ ] T024 [P] Implement IntersectionObserver logic for scroll detection
-- [ ] T025 Integrate infinite loading with AlbumGrid component
-- [ ] T026 Add loading spinner using shadcn/ui components during pagination
+- [x] T023 [P] Create useInfiniteScroll custom hook in src/hooks/useInfiniteScroll.ts
+- [x] T024 [P] Implement IntersectionObserver logic for scroll detection
+- [x] T025 Integrate infinite loading with AlbumGrid component
+- [x] T026 Add loading spinner using shadcn/ui components during pagination
 
 ## Phase 3.7: Mock Data Service
 

@@ -1,5 +1,6 @@
 import { AlbumGridProps } from '../../types'
 import AlbumTile from '../AlbumTile'
+import { Skeleton } from '../ui/skeleton'
 import { cn } from '../../lib/utils'
 
 const AlbumGrid = ({
@@ -26,13 +27,13 @@ const AlbumGrid = ({
         {Array.from({ length: 6 }).map((_, index) => (
           <div
             key={`skeleton-${index}`}
-            className="bg-white rounded-lg shadow-md overflow-hidden"
+            className="bg-card rounded-lg shadow-sm overflow-hidden border"
           >
-            <div className="aspect-square bg-gray-200 animate-pulse" />
+            <Skeleton className="aspect-square" />
             <div className="p-4 space-y-2">
-              <div className="h-5 bg-gray-200 animate-pulse rounded w-3/4" />
-              <div className="h-4 bg-gray-200 animate-pulse rounded w-1/2" />
-              <div className="h-3 bg-gray-200 animate-pulse rounded w-1/3" />
+              <Skeleton className="h-5 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-3 w-1/3" />
             </div>
           </div>
         ))}
