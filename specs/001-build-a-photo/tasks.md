@@ -24,10 +24,10 @@
 
 **CRITICAL: These setup tasks MUST be completed before any component implementation**
 
-- [ ] T007 [P] Create mock album data generator in src/mocks/albums.ts
-- [ ] T008 [P] Create TypeScript interfaces in src/types/index.ts from contracts
-- [ ] T009 [P] Setup test utilities and custom render functions in tests/utils.tsx
-- [ ] T010 [P] Create mock photo data with thumbnail URLs in src/mocks/photos.ts
+- [x] T007 [P] Create mock album data generator in src/mocks/albums.ts
+- [x] T008 [P] Create TypeScript interfaces in src/types/index.ts from contracts
+- [x] T009 [P] Setup test utilities and custom render functions in tests/utils.tsx
+- [x] T010 [P] Create mock photo data with thumbnail URLs in src/mocks/photos.ts
 
 ## Phase 3.3: Core UI Components Tests (TDD)
 
