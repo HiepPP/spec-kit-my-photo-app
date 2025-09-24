@@ -23,6 +23,8 @@ export interface UseInfiniteScrollReturn {
   setHasNextPage: (hasNext: boolean) => void
   /** Manual error control */
   setError: (error: string | null) => void
+  /** Focus management for new content */
+  focusNewContent: (selector?: string) => void
 }
 
 export function useInfiniteScroll(
@@ -44,6 +46,25 @@ export function useInfiniteScroll(
   const triggerRef = useRef<HTMLElement>(null)
   const observerRef = useRef<IntersectionObserver | null>(null)
   const callbackRef = useRef(callback)
+  const itemCountRef = useRef(0)
+
+  // Focus management function
+  const focusNewContent = useCallback((selector: string = '[role="button"]') => {
+    // Wait for DOM update
+    setTimeout(() => {
+      const items = document.querySelectorAll(selector)
+      const firstNewItem = items[itemCountRef.current] as HTMLElement
+      if (firstNewItem && firstNewItem.focus) {
+        firstNewItem.focus()
+
+        // Scroll into view if needed
+        firstNewItem.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest'
+        })
+      }
+    }, 100)
+  }, [])
 
   // Update callback ref when callback changes
   useEffect(() => {
@@ -126,5 +147,6 @@ export function useInfiniteScroll(
     setIsLoading,
     setHasNextPage,
     setError,
+    focusNewContent,
   }
 }

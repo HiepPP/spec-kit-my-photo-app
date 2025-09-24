@@ -87,6 +87,12 @@ export interface PhotoServiceEvents {
 interface BaseComponentProps {
   className?: string
   'data-testid'?: string
+  'aria-setsize'?: number
+  'aria-posinset'?: number
+  'aria-label'?: string
+  'aria-labelledby'?: string
+  'aria-describedby'?: string
+  role?: string
 }
 
 export interface AlbumGridProps extends BaseComponentProps {

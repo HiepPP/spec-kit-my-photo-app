@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ViewState, Album, Photo } from '../types'
+import { ViewState, Photo } from '../types'
 import AlbumGrid from '../components/AlbumGrid'
 import PhotoTileView from '../components/PhotoTileView'
 import ZoomModal from '../components/ZoomModal'
@@ -161,18 +161,49 @@ const LandingPage = ({
           {/* Infinite Scroll Trigger */}
           {hasNextPage && (
             <div
-              ref={triggerRef}
+              ref={triggerRef as React.RefObject<HTMLDivElement>}
               className="flex justify-center items-center py-8"
               data-testid="infinite-scroll-trigger"
+              role="status"
+              aria-live="polite"
+              aria-label={albumsLoading ? "Loading more albums" : "Scroll to load more albums"}
             >
               {albumsLoading ? (
                 <div className="flex items-center space-x-2">
                   <Spinner size="md" />
                   <span className="text-muted-foreground">Loading more albums...</span>
+                  <div className="sr-only">
+                    Loading page {Math.ceil(albums.length / 12) + 1} of albums
+                  </div>
                 </div>
               ) : (
-                <div className="text-gray-400">Scroll to load more albums</div>
+                <button
+                  onClick={async () => {
+                    try {
+                      // Focus on the newly loaded content after loading
+                      const currentCount = albums.length
+                      await refreshAlbums()
+                      // After new content loads, focus on first new album
+                      setTimeout(() => {
+                        const newAlbums = document.querySelectorAll('[data-testid^="album-tile-"]')
+                        const firstNewAlbum = newAlbums[currentCount] as HTMLElement
+                        if (firstNewAlbum) {
+                          firstNewAlbum.focus()
+                        }
+                      }, 100)
+                    } catch (error) {
+                      console.error('Failed to load more albums:', error)
+                    }
+                  }}
+                  className="text-blue-600 hover:text-blue-800 underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+                  aria-describedby="load-more-description"
+                >
+                  Load more albums
+                </button>
               )}
+              <div id="load-more-description" className="sr-only">
+                Use this button to manually load more albums, or scroll down to automatically load them
+              </div>
             </div>
           )}
 

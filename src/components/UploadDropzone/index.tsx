@@ -41,13 +41,22 @@ const UploadDropzone = ({
   }
 
   const handleClick = () => {
-    fileInputRef.current?.click()
+    if (!isUploading) {
+      fileInputRef.current?.click()
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if ((e.key === 'Enter' || e.key === ' ') && !isUploading) {
+      e.preventDefault()
+      fileInputRef.current?.click()
+    }
   }
 
   return (
     <div
       className={`
-        border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer
+        border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
         ${isDragOver
           ? 'border-blue-500 bg-blue-50'
           : 'border-gray-300 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
@@ -59,6 +68,12 @@ const UploadDropzone = ({
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      tabIndex={isUploading ? -1 : 0}
+      role="button"
+      aria-label={isUploading ? "Upload in progress" : "Click to select photos or drag and drop photos here"}
+      aria-describedby="upload-dropzone-description"
+      aria-live={isUploading ? "polite" : "off"}
       {...props}
     >
       <input
@@ -77,9 +92,14 @@ const UploadDropzone = ({
         <p className="text-lg font-medium text-gray-900">
           {isUploading ? 'Uploading...' : 'Drop photos here or click to select'}
         </p>
-        <p className="text-sm text-gray-500">
+        <p id="upload-dropzone-description" className="text-sm text-gray-500">
           Supports: {acceptedFileTypes.join(', ')} • Max {maxFileSize / (1024 * 1024)}MB per file
         </p>
+        {isUploading && (
+          <div className="sr-only" aria-live="polite">
+            Please wait while your photos are being uploaded
+          </div>
+        )}
       </div>
     </div>
   )

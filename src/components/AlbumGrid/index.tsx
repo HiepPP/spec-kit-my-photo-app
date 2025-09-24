@@ -1,3 +1,4 @@
+import { useCallback, useRef } from 'react'
 import { AlbumGridProps } from '../../types'
 import AlbumTile from '../AlbumTile'
 import { Skeleton } from '../ui/skeleton'
@@ -12,6 +13,60 @@ const AlbumGrid = ({
   className = '',
   ...props
 }: AlbumGridProps) => {
+  const gridRef = useRef<HTMLDivElement>(null)
+
+  // Keyboard navigation handler
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!gridRef.current) return
+
+    const tiles = Array.from(gridRef.current.querySelectorAll('[role="button"]')) as HTMLElement[]
+    const currentIndex = tiles.findIndex(tile => tile === document.activeElement)
+
+    let nextIndex = currentIndex
+    const cols = getGridColumns()
+
+    switch (e.key) {
+      case 'ArrowRight':
+        e.preventDefault()
+        nextIndex = Math.min(currentIndex + 1, tiles.length - 1)
+        break
+      case 'ArrowLeft':
+        e.preventDefault()
+        nextIndex = Math.max(currentIndex - 1, 0)
+        break
+      case 'ArrowDown':
+        e.preventDefault()
+        nextIndex = Math.min(currentIndex + cols, tiles.length - 1)
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        nextIndex = Math.max(currentIndex - cols, 0)
+        break
+      case 'Home':
+        e.preventDefault()
+        nextIndex = 0
+        break
+      case 'End':
+        e.preventDefault()
+        nextIndex = tiles.length - 1
+        break
+      default:
+        return
+    }
+
+    if (nextIndex !== currentIndex && tiles[nextIndex]) {
+      tiles[nextIndex].focus()
+    }
+  }, [])
+
+  // Helper function to determine grid columns based on screen size
+  const getGridColumns = useCallback(() => {
+    if (!gridRef.current) return 3
+
+    const styles = window.getComputedStyle(gridRef.current)
+    const cols = styles.gridTemplateColumns.split(' ').length
+    return cols
+  }, [])
   if (loading) {
     return (
       <div
@@ -21,6 +76,9 @@ const AlbumGrid = ({
           "auto-rows-max",
           className
         )}
+        role="region"
+        aria-label="Loading albums"
+        aria-live="polite"
         {...props}
       >
         {/* Loading skeleton */}
@@ -28,6 +86,7 @@ const AlbumGrid = ({
           <div
             key={`skeleton-${index}`}
             className="bg-card rounded-lg shadow-sm overflow-hidden border"
+            aria-hidden="true"
           >
             <Skeleton className="aspect-square" />
             <div className="p-4 space-y-2">
@@ -37,19 +96,25 @@ const AlbumGrid = ({
             </div>
           </div>
         ))}
+        <div className="sr-only">Loading your photo albums...</div>
       </div>
     )
   }
 
   if (albums.length === 0) {
     return (
-      <div className="text-center py-12">
+      <div
+        className="text-center py-12"
+        role="region"
+        aria-label="Empty albums state"
+      >
         <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
           <svg
             className="w-12 h-12 text-gray-400"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
           >
             <path
               fillRule="evenodd"
@@ -66,15 +131,19 @@ const AlbumGrid = ({
 
   return (
     <div
+      ref={gridRef}
       className={cn(
         "grid gap-6",
         "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
         "auto-rows-max",
         className
       )}
+      role="grid"
+      aria-label={`Photo albums grid containing ${albums.length} albums`}
+      onKeyDown={handleKeyDown}
       {...props}
     >
-      {albums.map((album) => (
+      {albums.map((album, index) => (
         <AlbumTile
           key={album.id}
           album={album}
@@ -82,6 +151,8 @@ const AlbumGrid = ({
           onClick={() => onAlbumClick(album.id)}
           onDelete={onAlbumDelete ? () => onAlbumDelete(album.id) : undefined}
           data-testid={`album-tile-${album.id}`}
+          aria-setsize={albums.length}
+          aria-posinset={index + 1}
         />
       ))}
     </div>

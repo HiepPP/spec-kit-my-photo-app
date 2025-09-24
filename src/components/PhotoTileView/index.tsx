@@ -10,20 +10,36 @@ const PhotoTileView = ({
 }: PhotoTileViewProps) => {
   if (loading) {
     return (
-      <div className={`responsive-grid photo-grid ${className}`} {...props}>
+      <div
+        className={`responsive-grid photo-grid ${className}`}
+        role="region"
+        aria-label="Loading photos"
+        aria-live="polite"
+        {...props}
+      >
         {/* Loading skeleton */}
         {Array.from({ length: 12 }).map((_, index) => (
-          <div key={`skeleton-${index}`} className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div
+            key={`skeleton-${index}`}
+            className="bg-white rounded-lg shadow-md overflow-hidden"
+            aria-hidden="true"
+          >
             <div className="aspect-square skeleton" />
           </div>
         ))}
+        <div className="sr-only">Loading photos for this album...</div>
       </div>
     )
   }
 
   return (
-    <div className={`responsive-grid photo-grid ${className}`} {...props}>
-      {photos.map((photo) => (
+    <div
+      className={`responsive-grid photo-grid ${className}`}
+      role="grid"
+      aria-label={`Photo grid containing ${photos.length} photos`}
+      {...props}
+    >
+      {photos.map((photo, index) => (
         <div
           key={photo.id}
           onClick={() => onPhotoClick(photo.id)}
@@ -33,6 +49,9 @@ const PhotoTileView = ({
           tabIndex={0}
           role="button"
           aria-label={`View photo ${photo.filename}`}
+          aria-setsize={photos.length}
+          aria-posinset={index + 1}
+          data-testid={`photo-tile-${photo.id}`}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault()

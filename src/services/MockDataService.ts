@@ -101,7 +101,7 @@ export class MockDataService implements PhotoService {
     // Process files if any exist
     if (files.length > 0) {
       // Simulate processing each file
-      files.forEach((file, index) => {
+      files.forEach((file) => {
         // Create mock album and photo data
         const captureDate = new Date()
 

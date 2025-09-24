@@ -68,11 +68,11 @@
 
 ## Phase 3.8: Accessibility and Polish
 
-- [ ] T031 [P] Add ARIA labels and keyboard navigation to AlbumGrid
-- [ ] T032 [P] Implement focus management for infinite scroll
-- [ ] T033 [P] Add loading states with proper ARIA live regions
-- [ ] T034 [P] Create Storybook stories for AlbumGrid and AlbumTile components
-- [ ] T035 Test with screen reader and keyboard-only navigation
+- [x] T031 [P] Add ARIA labels and keyboard navigation to AlbumGrid
+- [x] T032 [P] Implement focus management for infinite scroll
+- [x] T033 [P] Add loading states with proper ARIA live regions
+- [x] T034 [P] Create Storybook stories for AlbumGrid and AlbumTile components
+- [x] T035 Test with screen reader and keyboard-only navigation
 
 ## Phase 3.9: Integration and Performance
 
