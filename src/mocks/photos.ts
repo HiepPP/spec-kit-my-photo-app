@@ -238,7 +238,7 @@ export const cleanupPhotoUrls = (urls: string[]) => {
  */
 export const createMockPhotoForTesting = (
   overrides: Partial<Photo> = {},
-  useRealUrls: boolean = false
+  _useRealUrls: boolean = false
 ): Photo => {
   const photoId = overrides.id ?? 1
   const mockBlob = new Blob(['test'], { type: 'image/jpeg' })

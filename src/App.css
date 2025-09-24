@@ -1,14 +1,77 @@
+/* Reset root styling for full-width app */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
 
-.card {
-  padding: 2em;
+/* Responsive Grid System - 3 columns desktop, 2 tablet, 1 mobile */
+.responsive-grid {
+  @apply grid gap-4;
+
+  /* Mobile: 1 column */
+  grid-template-columns: 1fr;
+
+  /* Tablet: 2 columns */
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Desktop: 3 columns */
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
-.read-the-docs {
-  color: #888;
+/* Large screens: Optional 4+ columns for very wide displays */
+@media (min-width: 1536px) {
+  .responsive-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Photo-specific grid with more columns for smaller items */
+.responsive-grid.photo-grid {
+  /* Mobile: 2 columns for photos */
+  grid-template-columns: repeat(2, 1fr);
+
+  /* Tablet: 3 columns */
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Desktop: 4 columns */
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Large screens: 6 columns */
+  @media (min-width: 1536px) {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* Ensure consistent aspect ratios */
+.responsive-grid > * {
+  /* This ensures all grid items have consistent height */
+  min-height: 0;
+}
+
+/* Smooth transitions for interactive elements */
+.grid-item-interactive {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.grid-item-interactive:hover {
+  @apply scale-105 shadow-lg;
+}
+
+/* Loading skeleton animation */
+.skeleton {
+  @apply animate-pulse bg-gray-200 rounded;
+}
+
+/* Focus styles for accessibility */
+.grid-item-interactive:focus {
+  @apply outline-none ring-2 ring-blue-500 ring-offset-2;
 }

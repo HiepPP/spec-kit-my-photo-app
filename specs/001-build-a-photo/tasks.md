@@ -40,10 +40,10 @@
 
 ## Phase 3.4: Landing Page Layout (ONLY after tests are failing)
 
-- [ ] T015 Create main App component with routing setup in src/App.tsx
-- [ ] T016 Create Layout component with header and navigation in src/components/Layout/index.tsx
-- [ ] T017 Create Landing Page container component in src/pages/LandingPage.tsx
-- [ ] T018 Implement responsive 3-column grid system with Tailwind CSS
+- [x] T015 Create main App component with routing setup in src/App.tsx
+- [x] T016 Create Layout component with header and navigation in src/components/Layout/index.tsx
+- [x] T017 Create Landing Page container component in src/pages/LandingPage.tsx
+- [x] T018 Implement responsive 3-column grid system with Tailwind CSS
 
 ## Phase 3.5: Album Grid Implementation
 
