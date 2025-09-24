@@ -83,11 +83,11 @@
 
 ## Phase 3.10: Testing and Validation
 
-- [ ] T040 [P] Run full test suite and achieve 100% coverage
-- [ ] T041 [P] Execute Lighthouse performance audit (target: 90+ scores)
-- [ ] T042 [P] Validate WCAG 2.1 AA compliance with axe-core
-- [ ] T043 Manual testing of 3-column responsive grid on different screen sizes
-- [ ] T044 Load testing with 1000+ mock albums for infinite scroll performance
+- [x] T040 [P] Run full test suite and achieve 100% coverage
+- [x] T041 [P] Execute Lighthouse performance audit (target: 90+ scores)
+- [x] T042 [P] Validate WCAG 2.1 AA compliance with axe-core
+- [x] T043 Manual testing of 3-column responsive grid on different screen sizes
+- [x] T044 Load testing with 1000+ mock albums for infinite scroll performance
 
 ## Dependencies
 
