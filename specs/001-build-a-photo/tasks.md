@@ -47,10 +47,10 @@
 
 ## Phase 3.5: Album Grid Implementation
 
-- [ ] T019 [P] Implement AlbumTile component with shadcn/ui Card in src/components/AlbumTile/index.tsx
-- [ ] T020 [P] Create thumbnail display with lazy loading in AlbumTile component
-- [ ] T021 Implement AlbumGrid container component in src/components/AlbumGrid/index.tsx
-- [ ] T022 Add CSS Grid layout with responsive breakpoints (3 columns desktop, 2 tablet, 1 mobile)
+- [x] T019 [P] Implement AlbumTile component with shadcn/ui Card in src/components/AlbumTile/index.tsx
+- [x] T020 [P] Create thumbnail display with lazy loading in AlbumTile component
+- [x] T021 Implement AlbumGrid container component in src/components/AlbumGrid/index.tsx
+- [x] T022 Add CSS Grid layout with responsive breakpoints (3 columns desktop, 2 tablet, 1 mobile)
 
 ## Phase 3.6: Infinite Loading Implementation
 

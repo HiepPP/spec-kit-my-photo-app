@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, fireEvent, within } from '@testing-library/react'
-import { AlbumTile } from '../../src/components/AlbumTile'
+import AlbumTile from '../../src/components/AlbumTile'
 import { render, createMockAlbum, setupURLMocks } from '../utils'
 import { AlbumTileProps } from '../../src/types'
 

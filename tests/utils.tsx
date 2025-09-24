@@ -372,9 +372,9 @@ export const isKeyboardAccessible = (element: HTMLElement): boolean => {
 /**
  * Measure performance of a function
  */
-export const measurePerformance = async <T>(
-  fn: () => T | Promise<T>
-): Promise<{ result: T; duration: number }> => {
+export const measurePerformance = async function <TResult>(
+  fn: () => TResult | Promise<TResult>
+): Promise<{ result: TResult; duration: number }> {
   const start = performance.now()
   const result = await fn()
   const end = performance.now()

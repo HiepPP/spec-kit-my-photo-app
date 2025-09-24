@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, fireEvent, within } from '@testing-library/react'
-import { AlbumGrid } from '../../src/components/AlbumGrid'
+import AlbumGrid from '../../src/components/AlbumGrid'
 import { render, createMockAlbums, mockIntersectionObserver } from '../utils'
 import { AlbumGridProps } from '../../src/types'
 
