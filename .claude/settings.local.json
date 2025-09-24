@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(.specify/scripts/bash/*)"
+      "Bash(.specify/scripts/bash/*)",
+      "Bash(npm create:*)",
+      "Bash(npx create-vite:*)"
     ],
     "deny": [],
     "ask": []
