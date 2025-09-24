@@ -326,17 +326,16 @@ describe('MockDataService', () => {
       expect(zipBlob.size).toBeGreaterThan(0)
     })
 
-    it('handles export of empty album', async () => {
+    it('handles export of empty album by removing it', async () => {
       await service.uploadPhotos([mockFiles[0]])
       await waitForNextTick()
 
       const albums = await service.getAllAlbums()
-      await service.deletePhoto((await service.getPhotosInAlbum(albums[0].id))[0].id)
+      const albumId = albums[0].id
+      await service.deletePhoto((await service.getPhotosInAlbum(albumId))[0].id)
 
-      const zipBlob = await service.exportAlbumAsZip(albums[0].id)
-
-      expect(zipBlob).toBeInstanceOf(Blob)
-      expect(zipBlob.size).toBeGreaterThan(0) // Should contain at least ZIP structure
+      // Album should be removed when emptied, so export should fail
+      await expect(service.exportAlbumAsZip(albumId)).rejects.toThrow('Album not found')
     })
 
     it('throws error for non-existent album export', async () => {

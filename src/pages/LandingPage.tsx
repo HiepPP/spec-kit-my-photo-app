@@ -7,6 +7,7 @@ import UploadDropzone from '../components/UploadDropzone'
 import { Spinner } from '../components/ui/spinner'
 import { mockDataService } from '../services/MockDataService'
 import { useInfiniteAlbums } from '../hooks/useInfiniteAlbums'
+import { useRetry } from '../hooks/useRetry'
 
 interface LandingPageProps {
   viewState: ViewState
@@ -27,22 +28,39 @@ const LandingPage = ({
     error: albumsError,
     hasNextPage,
     triggerRef,
-    refresh: refreshAlbums
+    refresh: refreshAlbums,
+    retrying,
+    retryCount,
+    retry
   } = useInfiniteAlbums(12)
 
   const [photos, setPhotos] = useState<Photo[]>([])
   const [photosLoading, setPhotosLoading] = useState(false)
+  const [photosError, setPhotosError] = useState<string | null>(null)
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
+
+  // Retry logic for photo loading
+  const { execute: executePhotoLoad, retrying: photosRetrying, retryCount: photosRetryCount } = useRetry<Photo[]>({
+    maxRetries: 3,
+    initialDelay: 500,
+    backoffFactor: 1.5,
+  })
 
   useEffect(() => {
     const loadPhotos = async () => {
       if (!viewState.selectedAlbumId) return
 
       setPhotosLoading(true)
+      setPhotosError(null)
+
       try {
-        const photosData = await mockDataService.getPhotosInAlbum(viewState.selectedAlbumId)
+        const photosData = await executePhotoLoad(() =>
+          mockDataService.getPhotosInAlbum(viewState.selectedAlbumId!)
+        )
         setPhotos(photosData)
       } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to load photos'
+        setPhotosError(errorMessage)
         console.error('Failed to load photos:', error)
       } finally {
         setPhotosLoading(false)
@@ -52,7 +70,7 @@ const LandingPage = ({
     if (viewState.currentView === 'photos' && viewState.selectedAlbumId) {
       loadPhotos()
     }
-  }, [viewState.currentView, viewState.selectedAlbumId])
+  }, [viewState.currentView, viewState.selectedAlbumId, executePhotoLoad])
 
   useEffect(() => {
     const loadSelectedPhoto = async () => {
@@ -158,10 +176,46 @@ const LandingPage = ({
             </div>
           )}
 
-          {/* Error state */}
+          {/* Error and retry state */}
           {albumsError && (
-            <div className="text-center py-4">
-              <p className="text-red-600">Error loading albums: {albumsError}</p>
+            <div className="text-center py-4 space-y-3">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="flex items-center justify-center space-x-2 mb-2">
+                  <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                  <p className="text-red-800 font-medium">Failed to load albums</p>
+                </div>
+                <p className="text-red-600 text-sm mb-3">{albumsError}</p>
+                {retryCount > 0 && (
+                  <p className="text-red-500 text-xs mb-3">
+                    Retry attempt {retryCount} of 3
+                  </p>
+                )}
+                <div className="flex justify-center space-x-2">
+                  <button
+                    onClick={retry}
+                    disabled={retrying}
+                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                  >
+                    {retrying ? (
+                      <>
+                        <Spinner size="sm" />
+                        <span>Retrying...</span>
+                      </>
+                    ) : (
+                      <span>Try Again</span>
+                    )}
+                  </button>
+                  <button
+                    onClick={refreshAlbums}
+                    disabled={retrying || albumsLoading}
+                    className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Refresh
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -169,10 +223,46 @@ const LandingPage = ({
 
       {viewState.currentView === 'photos' && viewState.selectedAlbumId && (
         <div className="space-y-6">
+          {/* Photo error and retry state */}
+          {photosError && (
+            <div className="text-center py-4">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="flex items-center justify-center space-x-2 mb-2">
+                  <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                  <p className="text-red-800 font-medium">Failed to load photos</p>
+                </div>
+                <p className="text-red-600 text-sm mb-3">{photosError}</p>
+                {photosRetryCount > 0 && (
+                  <p className="text-red-500 text-xs mb-3">
+                    Retry attempt {photosRetryCount} of 3
+                  </p>
+                )}
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => window.location.reload()}
+                    disabled={photosRetrying}
+                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                  >
+                    {photosRetrying ? (
+                      <>
+                        <Spinner size="sm" />
+                        <span>Retrying...</span>
+                      </>
+                    ) : (
+                      <span>Try Again</span>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <PhotoTileView
             photos={photos}
             onPhotoClick={onPhotoClick}
-            loading={photosLoading}
+            loading={photosLoading || photosRetrying}
             selectedPhotoId={viewState.selectedPhotoId}
             className="responsive-grid"
             data-testid="photo-tile-view"

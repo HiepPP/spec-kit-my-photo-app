@@ -77,6 +77,14 @@ export class MockDataService implements PhotoService {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
+  private simulateRandomError(errorRate: number = 0.05): void {
+    // Simulate occasional network errors for testing retry logic
+    // Disabled during testing to ensure consistent test results
+    if (process.env.NODE_ENV !== 'test' && Math.random() < errorRate) {
+      throw new Error('Simulated network error: Connection timeout')
+    }
+  }
+
   async uploadPhotos(files: File[]): Promise<UploadSession> {
     await this.delay(500) // Simulate network delay
 
@@ -161,6 +169,9 @@ export class MockDataService implements PhotoService {
   async getAlbumsPaginated(page: number = 1, pageSize: number = 12): Promise<PaginatedResponse<Album>> {
     await this.delay(300) // Simulate network delay
 
+    // Simulate occasional network errors to test retry logic
+    this.simulateRandomError(0.02) // 2% error rate
+
     const sortedAlbums = [...this.albums].sort((a, b) => a.displayOrder - b.displayOrder)
     const totalAlbums = sortedAlbums.length
     const totalPages = Math.ceil(totalAlbums / pageSize)
@@ -185,6 +196,10 @@ export class MockDataService implements PhotoService {
 
   async getPhotosInAlbum(albumId: number): Promise<Photo[]> {
     await this.delay(400) // Simulate network delay
+
+    // Simulate occasional network errors to test retry logic
+    this.simulateRandomError(0.03) // 3% error rate
+
     return this.photos.filter(photo => photo.albumId === albumId)
   }
 

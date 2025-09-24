@@ -1,12 +1,13 @@
 /**
  * useInfiniteAlbums Hook
- * Manages infinite scrolling for albums with pagination
+ * Manages infinite scrolling for albums with pagination and retry logic
  */
 
 import { useState, useCallback, useEffect } from 'react'
 import { Album, PaginatedResponse } from '../types'
 import { mockDataService } from '../services/MockDataService'
 import { useInfiniteScroll } from './useInfiniteScroll'
+import { useRetry } from './useRetry'
 
 export interface UseInfiniteAlbumsReturn {
   albums: Album[]
@@ -16,6 +17,9 @@ export interface UseInfiniteAlbumsReturn {
   triggerRef: React.RefObject<HTMLElement>
   loadMore: () => Promise<void>
   refresh: () => Promise<void>
+  retrying: boolean
+  retryCount: number
+  retry: () => Promise<void>
 }
 
 export function useInfiniteAlbums(pageSize: number = 12): UseInfiniteAlbumsReturn {
@@ -24,13 +28,29 @@ export function useInfiniteAlbums(pageSize: number = 12): UseInfiniteAlbumsRetur
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hasNextPage, setHasNextPage] = useState(true)
+  const [lastFailedPage, setLastFailedPage] = useState<number | null>(null)
+
+  // Configure retry with album-specific settings
+  const { execute: executeWithRetry, retrying, retryCount, reset: resetRetry } = useRetry<PaginatedResponse<Album>>({
+    maxRetries: 3,
+    initialDelay: 1000,
+    backoffFactor: 1.5,
+    retryCondition: (error) => {
+      // Retry on network-like errors but not on validation errors
+      return !error.message.includes('not found') && !error.message.includes('invalid')
+    }
+  })
 
   const loadAlbumsPage = useCallback(async (page: number, reset: boolean = false) => {
     try {
       setLoading(true)
       setError(null)
+      setLastFailedPage(null)
+      resetRetry()
 
-      const response: PaginatedResponse<Album> = await mockDataService.getAlbumsPaginated(page, pageSize)
+      const response = await executeWithRetry(() =>
+        mockDataService.getAlbumsPaginated(page, pageSize)
+      )
 
       if (reset) {
         setAlbums(response.data)
@@ -43,10 +63,11 @@ export function useInfiniteAlbums(pageSize: number = 12): UseInfiniteAlbumsRetur
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to load albums'
       setError(errorMessage)
+      setLastFailedPage(page)
     } finally {
       setLoading(false)
     }
-  }, [pageSize])
+  }, [pageSize, executeWithRetry, resetRetry])
 
   const loadMore = useCallback(async () => {
     if (!hasNextPage || loading) return
@@ -59,6 +80,12 @@ export function useInfiniteAlbums(pageSize: number = 12): UseInfiniteAlbumsRetur
     setHasNextPage(true)
     await loadAlbumsPage(1, true)
   }, [loadAlbumsPage])
+
+  const retry = useCallback(async () => {
+    if (lastFailedPage) {
+      await loadAlbumsPage(lastFailedPage, lastFailedPage === 1)
+    }
+  }, [lastFailedPage, loadAlbumsPage])
 
   const { triggerRef } = useInfiniteScroll(loadMore, {
     enabled: hasNextPage && !loading,
@@ -88,5 +115,8 @@ export function useInfiniteAlbums(pageSize: number = 12): UseInfiniteAlbumsRetur
     triggerRef,
     loadMore,
     refresh,
+    retrying,
+    retryCount,
+    retry,
   }
 }

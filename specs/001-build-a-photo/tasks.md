@@ -61,10 +61,10 @@
 
 ## Phase 3.7: Mock Data Service
 
-- [ ] T027 [P] Create MockDataService class in src/services/MockDataService.ts
-- [ ] T028 [P] Implement paginated album fetching with simulated delays
-- [ ] T029 Connect MockDataService to AlbumGrid via React hooks
-- [ ] T030 Add error handling and retry logic for data fetching
+- [x] T027 [P] Create MockDataService class in src/services/MockDataService.ts
+- [x] T028 [P] Implement paginated album fetching with simulated delays
+- [x] T029 Connect MockDataService to AlbumGrid via React hooks
+- [x] T030 Add error handling and retry logic for data fetching
 
 ## Phase 3.8: Accessibility and Polish
 
