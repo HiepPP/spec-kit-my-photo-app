@@ -35,8 +35,8 @@
 
 - [x] T011 [P] Album Grid component test in tests/components/AlbumGrid.test.tsx
 - [x] T012 [P] Album Tile component test in tests/components/AlbumTile.test.tsx
-- [ ] T013 [P] Infinite scroll hook test in tests/hooks/useInfiniteScroll.test.tsx
-- [ ] T014 [P] Mock data service test in tests/services/MockDataService.test.tsx
+- [x] T013 [P] Infinite scroll hook test in tests/hooks/useInfiniteScroll.test.tsx
+- [x] T014 [P] Mock data service test in tests/services/MockDataService.test.tsx
 
 ## Phase 3.4: Landing Page Layout (ONLY after tests are failing)
 
