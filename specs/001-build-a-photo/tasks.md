@@ -33,8 +33,8 @@
 
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
 
-- [ ] T011 [P] Album Grid component test in tests/components/AlbumGrid.test.tsx
-- [ ] T012 [P] Album Tile component test in tests/components/AlbumTile.test.tsx
+- [x] T011 [P] Album Grid component test in tests/components/AlbumGrid.test.tsx
+- [x] T012 [P] Album Tile component test in tests/components/AlbumTile.test.tsx
 - [ ] T013 [P] Infinite scroll hook test in tests/hooks/useInfiniteScroll.test.tsx
 - [ ] T014 [P] Mock data service test in tests/services/MockDataService.test.tsx
 
