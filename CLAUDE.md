@@ -19,6 +19,7 @@ The project follows strict constitutional principles (see `.specify/memory/const
 ## Project Structure and Workflow
 
 ### Spec-Kit Architecture
+
 This project uses the Spec-Kit methodology for feature development:
 
 1. `/specify` - Create feature specifications in `specs/###-feature-name/spec.md`
@@ -27,17 +28,20 @@ This project uses the Spec-Kit methodology for feature development:
 4. Implementation follows the constitutional principles
 
 ### Key Directories
+
 - `.specify/` - Templates, scripts, and governance documents
 - `specs/` - Feature specifications and implementation plans
 - `.claude/` - Claude Code command definitions
 
 ### Essential Scripts
+
 - `.specify/scripts/bash/create-new-feature.sh` - Initialize new feature branches and specs
 - `.specify/scripts/bash/update-agent-context.sh claude` - Update this CLAUDE.md file
 
 ## Technology Stack
 
 ### Core Dependencies
+
 - **Frontend**: React.js 18+ with TypeScript
 - **Styling**: Tailwind CSS with shadcn/ui component library
 - **Build**: Vite for development and production builds
@@ -46,7 +50,9 @@ This project uses the Spec-Kit methodology for feature development:
 - **State Management**: React hooks (useState, useReducer) and Context API
 
 ### Development Commands
+
 Since this is a new project without package.json yet, these will be established during implementation:
+
 - Build: `npm run build` (to be configured with Vite)
 - Test: `npm test` (to be configured with Vitest)
 - Lint: `npm run lint` (to be configured)
@@ -55,12 +61,14 @@ Since this is a new project without package.json yet, these will be established 
 ## Constitutional Compliance
 
 ### Test-Driven Development
+
 - ALWAYS write failing tests before implementation
 - Use Red-Green-Refactor cycle
 - 100% test coverage is mandatory - no exceptions
 - Tests must cover all functional requirements from specifications
 
 ### Component Development
+
 - Start with shadcn/ui components when possible
 - Follow single responsibility principle
 - Use TypeScript for all components
@@ -68,6 +76,7 @@ Since this is a new project without package.json yet, these will be established 
 - Create custom hooks for shared logic
 
 ### Accessibility Requirements
+
 - Include ARIA labels on all interactive elements
 - Ensure keyboard navigation works
 - Test with screen readers
@@ -75,6 +84,7 @@ Since this is a new project without package.json yet, these will be established 
 - Validate against WCAG 2.1 AA standards
 
 ### Local Storage Strategy
+
 - Use SQLite for all data persistence
 - No cloud storage or external APIs for data
 - Implement data export/import capabilities
@@ -83,6 +93,7 @@ Since this is a new project without package.json yet, these will be established 
 ## Current Feature
 
 **Active Feature**: Photo Organizer App (`001-build-a-photo`)
+
 - **Specification**: `specs/001-build-a-photo/spec.md`
 - **Status**: Specification complete, ready for planning phase
 - **Key Requirements**: Upload photos, auto-group by date, drag-and-drop albums, tile view, zoom, ZIP export
