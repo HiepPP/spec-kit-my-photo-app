@@ -1,7 +1,4 @@
 {
-  "env": {
-    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "1000000"
-  },
   "permissions": {
     "allow": [
       "Bash(.specify/scripts/bash/*)",
@@ -12,9 +9,11 @@
       "Bash(npm run type-check:*)",
       "Bash(npm run build:*)",
       "Bash(npm install:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(.claude/commands/plan.md)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "outputStyle": "Explanatory"
 }
