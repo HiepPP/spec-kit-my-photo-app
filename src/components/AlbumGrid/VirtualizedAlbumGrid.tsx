@@ -4,7 +4,7 @@
  */
 
 import { useCallback, useRef, useMemo, useEffect, useState } from 'react'
-import { FixedSizeGrid as Grid } from 'react-window'
+import { Grid } from 'react-window'
 import { AlbumGridProps } from '../../types'
 import AlbumTile from '../AlbumTile'
 import { Skeleton } from '../ui/skeleton'

@@ -1,4 +1,7 @@
 /**
+import * as React from 'react';
+
+/**
  * Bundle Optimization Utilities
  * Runtime performance monitoring and optimization helpers
  */
@@ -311,12 +314,16 @@ export function useBundleOptimization() {
     setRecommendations(bundleOptimizer.getRecommendations())
 
     // Update metrics periodically
-    const interval = setInterval(() => {
+    const interval = typeof setInterval !== 'undefined' ? setInterval(() => {
       setMetrics(bundleOptimizer.getMetrics())
       setRecommendations(bundleOptimizer.getRecommendations())
-    }, 5000)
+    }, 5000) : null
 
-    return () => clearInterval(interval)
+    return () => {
+      if (interval && typeof clearInterval !== 'undefined') {
+        clearInterval(interval)
+      }
+    }
   }, [])
 
   const logReport = React.useCallback(() => {
@@ -352,7 +359,13 @@ export async function safeDynamicImport<T>(
 
       if (attempt < retries) {
         // Wait before retrying (exponential backoff)
-        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000))
+        await new Promise(resolve => {
+          if (typeof setTimeout !== 'undefined') {
+            setTimeout(resolve, Math.pow(2, attempt) * 1000)
+          } else {
+            resolve(undefined)
+          }
+        })
       }
     }
   }
@@ -366,7 +379,7 @@ export async function safeDynamicImport<T>(
 }
 
 // Development-only bundle analyzer
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
   // Log initial report after 5 seconds
   setTimeout(() => {
     bundleOptimizer.logReport()
