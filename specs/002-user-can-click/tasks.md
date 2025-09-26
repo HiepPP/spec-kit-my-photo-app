@@ -7,9 +7,9 @@
 Implement an image detail view modal that allows users to click on any photo in the gallery to view it in a focused 2-column layout with the image on the left and metadata (uploader info, date/time) on the right.
 
 ## Phase 3.1: Setup
-- [ ] T001 Verify project structure has src/components/, src/pages/, src/hooks/, src/services/, src/types/, src/utils/
-- [ ] T002 Install/verify shadcn/ui components for modal and buttons
-- [ ] T003 [P] Configure TypeScript types for Image and User entities
+- [X] T001 Verify project structure has src/components/, src/pages/, src/hooks/, src/services/, src/types/, src/utils/
+- [X] T002 Install/verify shadcn/ui components for modal and buttons
+- [X] T003 [P] Configure TypeScript types for Image and User entities
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
