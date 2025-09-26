@@ -13,12 +13,12 @@ Implement an image detail view modal that allows users to click on any photo in 
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
-- [ ] T004 [P] Contract test GET /api/images/{id} in tests/contract/test_image_get.test.ts
-- [ ] T005 [P] Contract test GET /api/images/{id}/file in tests/contract/test_image_file_get.test.ts
-- [ ] T006 [P] Contract test PUT /api/images/{id} in tests/contract/test_image_put.test.ts
-- [ ] T007 [P] Integration test image click opens detail modal in tests/integration/test_image_detail_flow.test.tsx
-- [ ] T008 [P] Integration test modal close methods in tests/integration/test_modal_close.test.tsx
-- [ ] T009 [P] Accessibility test for modal in tests/accessibility/test_modal_accessibility.test.tsx
+- [X] T004 [P] Contract test GET /api/images/{id} in tests/contract/test_image_get.test.ts
+- [X] T005 [P] Contract test GET /api/images/{id}/file in tests/contract/test_image_file_get.test.ts
+- [X] T006 [P] Contract test PUT /api/images/{id} in tests/contract/test_image_put.test.ts
+- [X] T007 [P] Integration test image click opens detail modal in tests/integration/test_image_detail_flow.test.tsx
+- [X] T008 [P] Integration test modal close methods in tests/integration/test_modal_close.test.tsx
+- [X] T009 [P] Accessibility test for modal in tests/accessibility/test_modal_accessibility.test.tsx
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
 - [ ] T010 [P] Image type definition in src/types/image.ts
