@@ -21,34 +21,34 @@ Implement an image detail view modal that allows users to click on any photo in 
 - [X] T009 [P] Accessibility test for modal in tests/accessibility/test_modal_accessibility.test.tsx
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
-- [ ] T010 [P] Image type definition in src/types/image.ts
-- [ ] T011 [P] User type definition in src/types/user.ts
-- [ ] T012 [P] ImageDetailState interface in src/types/state.ts
-- [ ] T013 [P] useImageDetail hook in src/hooks/useImageDetail.ts
-- [ ] T014 [P] ImageMetadata component in src/components/ImageMetadata/ImageMetadata.tsx
-- [ ] T015 [P] ImageDetailModal component in src/components/ImageDetailModal/ImageDetailModal.tsx
-- [ ] T016 Update ImageGallery component to handle click events
-- [ ] T017 GET /api/images/{id} endpoint implementation
-- [ ] T018 GET /api/images/{id}/file endpoint implementation
-- [ ] T019 PUT /api/images/{id} endpoint implementation
-- [ ] T020 Image service with detail fetching methods
+- [X] T010 [P] Image type definition in src/types/image.ts
+- [X] T011 [P] User type definition in src/types/user.ts
+- [X] T012 [P] ImageDetailState interface in src/types/state.ts
+- [X] T013 [P] useImageDetail hook in src/hooks/useImageDetail.ts
+- [X] T014 [P] ImageMetadata component in src/components/ImageMetadata/ImageMetadata.tsx
+- [X] T015 [P] ImageDetailModal component in src/components/ImageDetailModal/ImageDetailModal.tsx
+- [X] T016 Update ImageGallery component to handle click events
+- [X] T017 GET /api/images/{id} endpoint implementation
+- [X] T018 GET /api/images/{id}/file endpoint implementation
+- [X] T019 PUT /api/images/{id} endpoint implementation
+- [X] T020 Image service with detail fetching methods
 
 ## Phase 3.4: Integration
-- [ ] T021 Connect modal to gallery state management
-- [ ] T022 Implement image file URL generation
-- [ ] T023 Add keyboard navigation (ESC to close)
-- [ ] T024 Add click-outside-to-close functionality
-- [ ] T025 Implement focus trapping for accessibility
-- [ ] T026 Add screen reader announcements
+- [X] T021 Connect modal to gallery state management
+- [X] T022 Implement image file URL generation
+- [X] T023 Add keyboard navigation (ESC to close)
+- [X] T024 Add click-outside-to-close functionality
+- [X] T025 Implement focus trapping for accessibility
+- [X] T026 Add screen reader announcements
 
 ## Phase 3.5: Polish
-- [ ] T027 [P] Unit tests for useImageDetail hook in tests/hooks/test_useImageDetail.test.ts
-- [ ] T028 [P] Unit tests for ImageMetadata component in tests/components/test_ImageMetadata.test.tsx
-- [ ] T029 Performance tests (<100ms modal transitions)
-- [ ] T030 [P] Add responsive design for mobile stacking
-- [ ] T031 Add loading states for image fetching
-- [ ] T032 Add error handling for failed image loads
-- [ ] T033 Run quickstart.md test scenarios
+- [X] T027 [P] Unit tests for useImageDetail hook in tests/hooks/test_useImageDetail.test.ts
+- [X] T028 [P] Unit tests for ImageMetadata component in tests/components/test_ImageMetadata.test.tsx
+- [X] T029 Performance tests (<100ms modal transitions)
+- [X] T030 [P] Add responsive design for mobile stacking
+- [X] T031 Add loading states for image fetching
+- [X] T032 Add error handling for failed image loads
+- [X] T033 Run quickstart.md test scenarios
 
 ## Dependencies
 - Tests (T004-T009) before implementation (T010-T020)
