@@ -1,0 +1,187 @@
+# Image API Contracts for Detail View Feature
+openapi: 3.0.3
+info:
+  title: Photo App Image API
+  version: 1.0.0
+  description: API contracts for image management and detail view
+
+paths:
+  # Get image details
+  /api/images/{id}:
+    get:
+      summary: Get detailed information about a specific image
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Image details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageDetail'
+        '404':
+          description: Image not found
+        '500':
+          description: Internal server error
+
+  # Get image file/blob
+  /api/images/{id}/file:
+    get:
+      summary: Get the actual image file
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [thumb, medium, large]
+            default: medium
+      responses:
+        '200':
+          description: Image file
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Image not found
+
+  # Update image metadata
+  /api/images/{id}:
+    put:
+      summary: Update image metadata
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateImageRequest'
+      responses:
+        '200':
+          description: Image updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageDetail'
+        '400':
+          description: Invalid request data
+        '404':
+          description: Image not found
+
+components:
+  schemas:
+    ImageDetail:
+      type: object
+      required:
+        - id
+        - filename
+        - path
+        - uploadedBy
+        - uploadedAt
+        - fileSize
+        - mimeType
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        filename:
+          type: string
+          example: "vacation-photo.jpg"
+        path:
+          type: string
+          example: "/images/2024/09/vacation-photo.jpg"
+        url:
+          type: string
+          example: "blob:https://app.example.com/abc123"
+        caption:
+          type: string
+          example: "Beautiful sunset at the beach"
+        uploadedBy:
+          $ref: '#/components/schemas/UserSummary'
+        uploadedAt:
+          type: string
+          format: date-time
+          example: "2024-09-26T14:30:00Z"
+        capturedAt:
+          type: string
+          format: date-time
+          example: "2024-09-25T18:45:00Z"
+        fileSize:
+          type: integer
+          format: int64
+          example: 2457600
+        width:
+          type: integer
+          example: 4032
+        height:
+          type: integer
+          example: 3024
+        mimeType:
+          type: string
+          example: "image/jpeg"
+        cameraModel:
+          type: string
+          example: "iPhone 14 Pro"
+        location:
+          type: string
+          example: "37.7749,-122.4194"
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["vacation", "beach", "sunset"]
+
+    UserSummary:
+      type: object
+      required:
+        - id
+        - username
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+          example: "johndoe"
+        displayName:
+          type: string
+          example: "John Doe"
+        avatarUrl:
+          type: string
+          format: uri
+          example: "https://example.com/avatars/john.jpg"
+
+    UpdateImageRequest:
+      type: object
+      properties:
+        caption:
+          type: string
+          maxLength: 500
+        tags:
+          type: array
+          items:
+            type: string
+            maxLength: 50
+      example:
+        caption: "Updated caption"
+        tags: ["nature", "landscape"]
